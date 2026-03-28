@@ -26,14 +26,19 @@ Healthcare search systems routinely receive misspelled queries from patients and
 Dense retrieval benefits even more from correction (+21.8% MRR) than lexical retrieval (+6.7%).
 
 ## Repository Structure
-code/
-├── run_experiments.py # Main experiment pipeline (BM25 + TF-IDF)
-├── dense_retrieval.py # Dense embedding experiments (nomic-embed-text)
-├── llm_correction.py # LLM-based correction (Ollama + Claude)
-├── medspellguard.py # MedSpellGuard safety-constraint implementation
-├── bootstrap_significance.py # Paired bootstrap resampling tests
-└── results/ # Cached experiment outputs
 
+```
+code/
+├── pipeline.py               # Main experiment pipeline (BM25 + TF-IDF)
+├── dense_retrieval.py         # Dense embedding experiments (nomic-embed-text)
+├── llm_correction.py          # LLM-based correction (Ollama + Claude)
+├── bootstrap_tests.py         # Paired bootstrap resampling tests
+├── requirements.txt           # Python dependencies
+├── data/
+│   ├── LiveQA_MedicalTask_TREC2017/  # TREC 2017 queries + judgements
+│   └── MedQuAD/                      # Answer corpus passages
+└── results/                   # Cached experiment outputs
+```
 
 ## Datasets
 
@@ -45,40 +50,54 @@ code/
 
 ```bash
 # Install dependencies
-pip install -r requirements.txt
+pip install -r code/requirements.txt
 
 # Run main experiments (BM25 + TF-IDF)
-python code/run_experiments.py
+python code/pipeline.py
 
-# Run dense retrieval experiments
+# Run dense retrieval experiments (requires Ollama with nomic-embed-text)
 python code/dense_retrieval.py
 
 # Run LLM correction (requires Ollama running locally)
 python code/llm_correction.py
 
 # Run bootstrap significance tests
-python code/bootstrap_significance.py
+python code/bootstrap_tests.py
+```
 
-LLM Correction Setup
+### LLM Correction Setup
+
 For llama3.1:
-
+```bash
 ollama pull llama3.1:8b
 ollama serve
+```
 
-For Claude: set ANTHROPIC_API_KEY in your environment.
+For dense retrieval embeddings:
+```bash
+ollama pull nomic-embed-text
+```
 
-Requirements
-Python 3.9+
-Ollama (for local LLM correction)
-See requirements.txt for Python dependencies
-Citation
+For Claude: set `ANTHROPIC_API_KEY` in your environment.
+
+## Requirements
+
+- Python 3.9+
+- numpy, scipy
+- Ollama (for local LLM correction and dense retrieval)
+
+## Citation
+
+```bibtex
 @article{singh2026domainaware,
-  title={Domain-Aware Query Correction for Healthcare Information Retrieval: 
+  title={Domain-Aware Query Correction for Healthcare Information Retrieval:
          A Framework with Safety Constraints and Empirical Evaluation},
   author={Singh, Saurabh K},
   journal={arXiv preprint arXiv:2603.19249},
   year={2026}
 }
+```
 
-License
+## License
+
 MIT
